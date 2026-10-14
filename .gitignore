@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+.venv/
+/runs/
+/datasets/
+/weights/
+/Ultralytics/
+*.pt
+*.onnx
+*.espdl
+*.cache
+.idea/

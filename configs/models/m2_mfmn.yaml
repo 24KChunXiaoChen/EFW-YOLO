@@ -1,0 +1,30 @@
+# M2 source candidate: New/yolo26_neck精修版目前更加轻量和高效的版本.yaml.
+# ShuffleNetV2 + MFMN; retain C2PSA. Historical run identity is not established.
+nc: 1
+scale: n
+end2end: false
+reg_max: 1
+scales:
+  n: [0.50, 0.25, 512]
+backbone:
+  - [-1, 1, shufflenetv2_05, []]          # 0..4
+  - [-1, 1, SPPF, [512, 5, 3, true]]     # 5
+  - [-1, 2, C2PSA, [512]]               # 6
+head:
+  - [-1, 1, DWConv, [256, 1, 1]]         # 7
+  - [-1, 1, nn.Upsample, [null, 2, nearest]] # 8
+  - [3, 1, DWConv, [256, 1, 1, 1, false]] # 9
+  - [[-2, -1], 1, Concat, [1]]           # 10
+  - [-1, 2, C3k2, [256, true]]           # 11
+  - [-1, 1, Conv, [256, 1, 1]]           # 12
+  - [-1, 1, nn.Upsample, [null, 2, nearest]] # 13
+  - [2, 1, DWConv, [256, 1, 1, 1, false]] # 14
+  - [[-2, -1], 1, Concat, [1]]           # 15
+  - [-1, 2, SRSM, [256]]                 # 16
+  - [-1, 1, DWConv, [256, 3, 2]]         # 17
+  - [[-1, 12], 1, Concat, [1]]           # 18
+  - [-1, 2, SRSM, [256]]                 # 19
+  - [-1, 1, DWConv, [256, 3, 2]]         # 20
+  - [[-1, 7], 1, Concat, [1]]            # 21
+  - [-1, 2, SRSM, [256]]                 # 22
+  - [[16, 19, 22], 1, Detect, [nc]]      # 23

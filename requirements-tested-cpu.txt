@@ -1,0 +1,16 @@
+# Top-level versions observed in the CPU verification environment (Python 3.13).
+# Not a fresh-environment installation test or the paper's original PyTorch 2.8 environment.
+torch==2.11.0
+torchvision==0.26.0
+numpy==2.3.5
+PyYAML==6.0.3
+Pillow==12.2.0
+opencv-python==4.13.0.92
+scipy==1.17.1
+matplotlib==3.10.8
+polars==1.39.3
+requests==2.32.5
+psutil==7.2.2
+ultralytics-thop==2.0.18
+onnx==1.21.0
+onnxruntime==1.24.4

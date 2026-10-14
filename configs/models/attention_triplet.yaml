@@ -1,0 +1,32 @@
+# Triplet candidate reconstructed by replacing LKAA in the fixed MFMN model.
+# Local reference: IR_YOLO/.../nn/Addmodules/AttentionTriplet.py (AGPL-3.0).
+# This is NOT a verified recovery of the manuscript's Triplet experiment.
+nc: 1
+scale: n
+end2end: false
+reg_max: 1
+scales:
+  n: [0.50, 0.25, 512]
+backbone:
+  - [-1, 1, shufflenetv2_05, []]
+  - [-1, 1, SPPF, [512, 5, 3, true]]
+  - [-1, 1, TripletAttention, []]
+  - [-1, 1, nn.Identity, []]
+head:
+  - [-1, 1, DWConv, [256, 1, 1]]
+  - [-1, 1, nn.Upsample, [null, 2, nearest]]
+  - [3, 1, DWConv, [256, 1, 1, 1, false]]
+  - [[-2, -1], 1, Concat, [1]]
+  - [-1, 2, C3k2, [256, true]]
+  - [-1, 1, Conv, [256, 1, 1]]
+  - [-1, 1, nn.Upsample, [null, 2, nearest]]
+  - [2, 1, DWConv, [256, 1, 1, 1, false]]
+  - [[-2, -1], 1, Concat, [1]]
+  - [-1, 2, SRSM, [256]]
+  - [-1, 1, DWConv, [256, 3, 2]]
+  - [[-1, 13], 1, Concat, [1]]
+  - [-1, 2, SRSM, [256]]
+  - [-1, 1, DWConv, [256, 3, 2]]
+  - [[-1, 8], 1, Concat, [1]]
+  - [-1, 2, SRSM, [256]]
+  - [[17, 20, 23], 1, Detect, [nc]]

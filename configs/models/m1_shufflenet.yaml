@@ -1,0 +1,27 @@
+# M1 reconstruction from the manuscript: replace baseline backbone only.
+# No matching historical complete YAML/checkpoint has yet been identified.
+# This runnable candidate MUST NOT be labeled a reproduction of M1 results.
+nc: 1
+scale: n
+end2end: false
+reg_max: 1
+scales:
+  n: [0.50, 0.25, 1024]
+backbone:
+  - [-1, 1, shufflenetv2_05, []]          # 0..4
+  - [-1, 1, SPPF, [1024, 5, 3, true]]    # 5
+  - [-1, 2, C2PSA, [1024]]              # 6
+head:
+  - [-1, 1, nn.Upsample, [null, 2, nearest]] # 7
+  - [[-1, 3], 1, Concat, [1]]            # 8
+  - [-1, 2, C3k2, [512, true]]           # 9
+  - [-1, 1, nn.Upsample, [null, 2, nearest]] # 10
+  - [[-1, 2], 1, Concat, [1]]            # 11
+  - [-1, 2, C3k2, [256, true]]           # 12
+  - [-1, 1, Conv, [256, 3, 2]]           # 13
+  - [[-1, 9], 1, Concat, [1]]            # 14
+  - [-1, 2, C3k2, [512, true]]           # 15
+  - [-1, 1, Conv, [512, 3, 2]]           # 16
+  - [[-1, 6], 1, Concat, [1]]            # 17
+  - [-1, 1, C3k2, [1024, true, 0.5, true]] # 18
+  - [[12, 15, 18], 1, Detect, [nc]]      # 19

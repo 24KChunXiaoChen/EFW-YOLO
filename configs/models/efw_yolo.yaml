@@ -1,0 +1,36 @@
+# EFW-YOLO: refactored copy of New/yolo26_New.yaml (AGPL-3.0).
+# Source topology is preserved; nc is explicitly fixed to the flame class.
+# Runtime stages [8,4,4]; nominal neck 256 -> actual 64 at nano scale.
+nc: 1
+scale: n
+end2end: false
+reg_max: 1
+scales:
+  n: [0.50, 0.25, 512]
+
+backbone:
+  # Multi-output source parser reserves indices 0..4 for the backbone.
+  - [-1, 1, shufflenetv2_05, []]          # 0..4; final P3=2, P4=3, P5=4
+  - [-1, 1, SPPF, [512, 5, 3, true]]     # 5
+  - [-1, 1, DWConv, [512, 7, 1, 3]]      # 6: LKAA spatial operation
+  - [-1, 1, PfAAM, [128]]                # 7: LKAA parameter-free reweighting
+
+# MFMN is this complete fusion topology. SRSM names the former ESPBlock.
+head:
+  - [-1, 1, DWConv, [256, 1, 1]]         # 8: Y5 lateral projection
+  - [-1, 1, nn.Upsample, [null, 2, nearest]] # 9
+  - [3, 1, DWConv, [256, 1, 1, 1, false]] # 10: P4 projection; legacy args retained
+  - [[-2, -1], 1, Concat, [1]]           # 11
+  - [-1, 2, C3k2, [256, true]]           # 12
+  - [-1, 1, Conv, [256, 1, 1]]           # 13: Y4 lateral projection
+  - [-1, 1, nn.Upsample, [null, 2, nearest]] # 14
+  - [2, 1, DWConv, [256, 1, 1, 1, false]] # 15: P3 projection
+  - [[-2, -1], 1, Concat, [1]]           # 16
+  - [-1, 2, SRSM, [256]]                 # 17: Y3; scaled repeat count=1
+  - [-1, 1, DWConv, [256, 3, 2]]         # 18
+  - [[-1, 13], 1, Concat, [1]]           # 19
+  - [-1, 2, SRSM, [256]]                 # 20: Y4 hat
+  - [-1, 1, DWConv, [256, 3, 2]]         # 21
+  - [[-1, 8], 1, Concat, [1]]            # 22
+  - [-1, 2, SRSM, [256]]                 # 23: Y5 hat
+  - [[17, 20, 23], 1, Detect, [nc]]      # 24: one-to-many, strides 8/16/32

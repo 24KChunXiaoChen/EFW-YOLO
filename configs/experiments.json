@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "baseline",
+      "target_config_filename": "baseline.yaml"
+    },
+    {
+      "id": "m1_shufflenet",
+      "target_config_filename": "m1_shufflenet.yaml"
+    },
+    {
+      "id": "m2_mfmn",
+      "target_config_filename": "m2_mfmn.yaml"
+    },
+    {
+      "id": "efw_yolo",
+      "target_config_filename": "efw_yolo.yaml"
+    },
+    {
+      "id": "attention_none",
+      "target_config_filename": "attention_none.yaml"
+    },
+    {
+      "id": "attention_triplet",
+      "target_config_filename": "attention_triplet.yaml"
+    },
+    {
+      "id": "attention_mlla",
+      "target_config_filename": "attention_mlla.yaml"
+    },
+    {
+      "id": "attention_lkdsc",
+      "target_config_filename": "attention_lkdsc.yaml"
+    },
+    {
+      "id": "yolov5n",
+      "target_config_filename": "yolov5nu.yaml"
+    },
+    {
+      "id": "yolov8n",
+      "target_config_filename": "yolov8n.yaml"
+    },
+    {
+      "id": "yolov11n",
+      "target_config_filename": "yolo11n.yaml"
+    },
+    {
+      "id": "espdet_pico",
+      "target_config_filename": null
+    },
+    {
+      "id": "m1_historical_e2e",
+      "target_config_filename": "m1_shufflenet_historical_e2e.yaml"
+    }
+  ]
+}
